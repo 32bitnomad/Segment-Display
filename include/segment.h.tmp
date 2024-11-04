@@ -1,0 +1,229 @@
+#ifndef __SEGMENT_DISPLAY__
+#define __SEGMENT_DISPLAY__
+
+#include <Arduino.h>
+
+#define S1 0b00000100
+#define S2 0b00001000
+#define S3 0b00010000
+#define S4 0b00100000
+#define S5 0b01000000
+#define S6 0b10000000
+#define S7 0b00000001
+
+#define D_ALL 0b000000
+
+class MultiSegmentDisplay
+{
+private: 
+
+    /****************pin map controls*******************/
+    void reset_portd()
+    {
+    DDRD = (DDRD & B00000011); //set all input except first two
+    }
+
+    void reset_portb()
+    {
+    DDRB = (DDRD & B11111110); //set bit 0 to input
+    }
+
+    void set_portd(uint8_t mode, uint8_t output)
+    {
+    DDRD = (DDRD & B00000011) | mode; 
+    PORTD = (PORTD & B00000011) | output; 
+    }
+
+    void set_portb(uint8_t mode, uint8_t output)
+    {
+    DDRB = (DDRB & B11111110) | mode; 
+    PORTB = (PORTB & B11111110) | (output & B00000001);
+    }
+    /**************************************************/
+
+    /****************functions for each led*******************/
+
+    void a1();
+    void b1();
+
+    void a4();
+    void b4();
+
+    void a6();
+    void b6();
+    void c6();
+    void d6();
+    void e6();
+    void f6();
+    void g6();
+
+    void a5();
+    void b5();
+    void c5();
+    void d5();
+    void e5();
+    void f5();
+    void g5();
+
+    void a3()
+    {
+    set_portd((S6 | S5), S5); //set s6 s5 output s6 low s5 high
+    set_portb(0, 0); //set s7 input 
+    }
+
+    void e3()
+    {
+    set_portd((S6 | S4), S4); //set s6 s4 output s6 low s4 high
+    set_portb(0, 0); //set s7 input 
+    }
+
+    void g3()
+    {
+    set_portd((S6 | S1), S1); //set s6 s1 output s6 low s1 high
+    set_portb(0, 0); //set s7 input 
+    }
+
+    void c3()
+    {
+    set_portd((S6 | S2), S2); //set s6 s2 output s6 low s2 high
+    set_portb(0, 0); //set s7 input 
+    }
+
+    void f3()
+    {
+    set_portd((S6 | S3), S3); //set s6 s3 output s6 low s3 high
+    set_portb(0, 0); //set s7 input 
+    }
+
+    void d3()
+    {
+    set_portd(S5, 0); //set s6 s1 output s6 low s1 high
+    set_portb(S7, S7); //set s7 input
+    }
+
+    void b3()
+    {
+    set_portd((S5 | S6), S6); //set s5 s6 output s5 low s6 high
+    set_portb(0, 0); //set s7 input
+    }
+
+    void a2()
+    {
+    set_portd (S6, S6); //set s6 output s6 high
+    set_portb(S7, 0); //set s7 output low
+    }
+
+    void b2()
+    {
+    set_portd (S6, 0); //set s6 output s6 low
+    set_portb(S7, S7); //set s7 output low
+    }
+
+    void e2()
+    {
+    set_portd (S5, S5); //set s5 output s5 high
+    set_portb(S7, 0); //set s7 output low
+    }
+
+    void g2()
+    {
+    set_portd (S2, S2); //set s2 output s2 high
+    set_portb(S7, 0); //set s7 output low
+    }
+
+    void c2()
+    {
+    set_portd (S3, S3); //set s3 output s3 high
+    set_portb(S7, 0); //set s7 output low
+    }
+
+    void f2()
+    {
+    set_portd (S4, S4); //set s4 output s4 high
+    set_portb(S7, 0); //set s7 output low
+    }
+
+    void d2()
+    {
+    set_portd (S1, S1); //set s2 output s2 high
+    set_portb(S7, 0); //set s7 output low
+    }
+
+    void (MultiSegmentDisplay::*list[4][7])() = {
+        { &MultiSegmentDisplay::a2, &MultiSegmentDisplay::b2, &MultiSegmentDisplay::c2, &MultiSegmentDisplay::d2, &MultiSegmentDisplay::e2, &MultiSegmentDisplay::f2, &MultiSegmentDisplay::g2 },
+        { &MultiSegmentDisplay::a3, &MultiSegmentDisplay::b3, &MultiSegmentDisplay::c3, &MultiSegmentDisplay::d3, &MultiSegmentDisplay::e3, &MultiSegmentDisplay::f3, &MultiSegmentDisplay::g3 },
+        { &MultiSegmentDisplay::a5, &MultiSegmentDisplay::b5, &MultiSegmentDisplay::c5, &MultiSegmentDisplay::d5, &MultiSegmentDisplay::e5, &MultiSegmentDisplay::f5, &MultiSegmentDisplay::g5 },
+        { &MultiSegmentDisplay::a6, &MultiSegmentDisplay::b6, &MultiSegmentDisplay::c6, &MultiSegmentDisplay::d6, &MultiSegmentDisplay::e6, &MultiSegmentDisplay::f6, &MultiSegmentDisplay::g6 }
+    };
+
+    const int8_t numbers[11][7]= { {0,-1,2,3,4,5,6},     //0
+                        {-1,-1,-1,-1,4,5,-1}, //1 
+                        {0,1,2,-1,4,-1,6},    //2
+                        {0,1,2,-1,4,5,-1},    //3
+                        {1,3,4,5,-1,-1,-1},   //4
+                        {0,1,2,3,5,-1,-1},    //5
+                        {0,1,2,3,5,6,-1},     //6
+                        {0,4,5,-1,-1,-1,-1},  //7
+                        {0,1,2,3,4,5,6},      //8
+                        {0,1,2,3,4,5,-1},    //9
+                        {-1,-1,-1,-1,-1,-1,-1}}; //10 -blank-
+
+public: 
+    MultiSegmentDisplay();
+    ~MultiSegmentDisplay();
+
+    void updateDisplay(int *);
+    void updateDisplayNums(int);
+
+    void low_bat()
+    {
+    DDRB =  (DDRB & B11111110); //set s7 input
+    DDRD =  (DDRD & B00000011) |B00010100;          //set s1 output
+
+    PORTD = (PORTD & B00000011) | B00000100;  //set s1 high 
+    }
+
+    void green_liq()
+    {
+    DDRB =  (DDRB & B11111110); //set s7 input
+    DDRD =  (DDRD & B00000011) |B00101000;          //set s1 output
+
+    PORTD = (PORTD & B00000011) | B00100000;  //set s1 high 
+    }
+
+    void l_percentage()
+    {
+    DDRB =  (DDRB & B11111110); //set s7 input
+    DDRD =  (DDRD & B00000011) |B01001000;          //set s1 output
+
+    PORTD = (PORTD & B00000011) | B01000000;  //set s1 high 
+    }
+
+    void red_liq()
+    {
+    DDRB =  (DDRB & B11111110); //set s7 input
+    DDRD =  (DDRD & B00000011) |B01100000;          //set s5 s3 output
+
+    PORTD = (PORTD & B00000011) | B00100000;  //set s5 low s3 high    
+    }
+
+    void r_percentage()
+    {
+    DDRB =  (DDRB & B11111110); //set s7 input
+    DDRD =  (DDRD & B00000011) |B10000100;          //set s6 s1 output
+
+    PORTD = (PORTD & B00000011) | B10000000;  //set s1 low s6 high    
+    }
+
+    void good_bat()
+    {
+    DDRB =  (DDRB & B11111110); //set s7 input
+    DDRD =  (DDRD & B00000011) |B01000100;          //set s6 s1 output
+
+    PORTD = (PORTD & B00000011) | B01000000;  //set s1 low s6 high    
+    }
+    };
+
+extern MultiSegmentDisplay multiSegmentDisplay;
+
+#endif

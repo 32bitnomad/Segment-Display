@@ -1,0 +1,139 @@
+#include "segment.h"
+
+
+
+MultiSegmentDisplay::MultiSegmentDisplay()
+{
+    
+}
+
+MultiSegmentDisplay::~MultiSegmentDisplay()
+{
+    
+}
+
+void MultiSegmentDisplay::a1()
+    { 
+        set_portd(S2, 0); //set s2 output low
+        set_portb(S7, S7); //set s7 output high
+    }
+
+void MultiSegmentDisplay::b1()
+    {
+        set_portd((S2 | S6), S6); //set s2 s6 output s2 low s6 high
+        set_portb(0, 0); //set s7 input
+    }
+
+void MultiSegmentDisplay::a4()
+    {
+        set_portd((S2 | S1), S1); //set s2 s6 output s2 low s1 high
+        set_portb(0, 0); //set s7 input
+    }
+
+void MultiSegmentDisplay::b4()
+    {
+        set_portd((S2 | S3), S3); //set s2 s6 output s2 low s3 high
+        set_portb(0, 0); //set s7 input
+    }
+
+void MultiSegmentDisplay::a6()
+    {
+        set_portd((S4 | S2), S2); //set s4 s2 output s4 low s2 high
+        set_portb(0, 0); //set s7 input
+    }
+
+void MultiSegmentDisplay::b6()
+    {
+        set_portd((S3 | S2), S2); //set s3 s2 output s3 low s2 high
+        set_portb(0, 0); //set s7 input
+    }
+
+void MultiSegmentDisplay::c6()
+    {
+    set_portd((S3 | S6), S6); //set s3 s6 output s3 low s6 high
+    set_portb(0, 0); //set s7 input
+    }
+
+void MultiSegmentDisplay::d6()
+    {
+        set_portd((S3 | S4), S4); //set s3 s4 output s3 low s4 high
+        set_portb(0, 0); //set s7 input
+    }
+
+void MultiSegmentDisplay::e6()
+    {
+        set_portd((S4 | S1), S1); //set s4 s2 output s4 low s2 high
+        set_portb(0, 0); //set s7 input
+    }
+
+void MultiSegmentDisplay::f6()
+    {
+        set_portd(S3, 0); //set s3 output low
+        set_portb(S7, S7); //set s7 output high
+    }
+
+void MultiSegmentDisplay::g6()
+    {
+        set_portd((S3 | S5), S5); //set s3 s5 output s3 low s5 high
+        set_portb(0, 0); //set s7 input
+    }
+
+void MultiSegmentDisplay::a5()
+    {
+        set_portd((S5 | S3), S3); //set s5 s3 output s5 low s3 high
+        set_portb(0, 0); //set s7 input
+    }
+
+void MultiSegmentDisplay::b5()
+    {
+        set_portd((S4 | S3), S3); //set s4 s3 output s4 low s3 high
+        set_portb(0, 0); //set s7 input
+    }
+
+void MultiSegmentDisplay::c5()
+    {
+        set_portd(S4, 0); //set s4 output low
+        set_portb(S7, S7); //set s7 output high
+    }
+
+void MultiSegmentDisplay::d5()
+    {
+        set_portd((S4 | S5), S5); //set s4 s5 output s4 low s5 high
+        set_portb(0, 0); //set s7 input
+    }
+
+void MultiSegmentDisplay::e5()
+    {
+        set_portd((S5 | S2), S2); //set s5 s2 output s5 low s2 high
+        set_portb(0, 0); //set s7 input
+    }
+
+void MultiSegmentDisplay::f5()
+    {    
+        set_portd((S5 | S1), S1); //set s5 s1 output s5 low s1 high
+        set_portb(0, 0); //set s7 input 
+    }
+
+void MultiSegmentDisplay::g5()
+    {
+        set_portd((S4 | S6), S6); //set s4 s6 output s4 low s6 high
+        set_portb(0, 0); //set s7 input
+    }
+
+
+void MultiSegmentDisplay::updateDisplay(int * arr)
+{
+    for(int i = 0; i < 7; i++)
+    {
+        for(int j = 0 ; j < 4; j++)
+        {
+            //if(numbers[arr[j]][i] != -1)
+            {
+                //(this->*list[j][numbers[arr[j]][i]])();
+                delayMicroseconds(20);
+                reset_portb();
+                reset_portd();
+            }
+        }
+    }    
+}
