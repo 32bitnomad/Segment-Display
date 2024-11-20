@@ -7,11 +7,6 @@ static void reset_ports()
   DDRB = (DDRD & B11111110); // set bit 0 to input
 }
 
-static void reset_portb()
-{
-  DDRB = (DDRD & B11111110); // set bit 0 to input
-}
-
 static void set_portd(int mode, int output)
 {
   DDRD = (DDRD & B00000011) | mode;
@@ -280,7 +275,7 @@ static const int8_t two_numbers[11][7] = {{-1,-1}, //0
 static void (*shapes[6])() = {red_bat, green_bat, red_liq, green_liq, l_percentage, r_percentage};
 
 static uint8_t g_s_nums[4] = {10,10,10,10};
-static uint8_t g_t_nums[2] = {0,0};
+static uint8_t g_t_nums[2] = {10,10};
 static uint8_t g_shapes[6] = {0,0,0,0,0,0};
 
 void update_display(uint8_t* s_nums, uint8_t* t_nums, uint8_t* shape)
@@ -333,36 +328,21 @@ void update_display(uint8_t* s_nums, uint8_t* t_nums, uint8_t* shape)
 
 void send_six_digit_number_to_display(uint32_t number)
 {
-  int two_seg[2] = {10,10};
-  int seven_seg[4] = {10,10,10,10};
-  for (int i = 5; i >= 0; i--) {
-    if(i == 3 || i == 0) // for hundreds
-    {
-      two_seg[i/3] = ((number%10 == 1) ? 1 : 0) ;
-      number /=10;
-    }
-    else
-    {
-      if(i == 1 || i == 2) // 
-      {
-        seven_seg[i-1] =  number%10;
-        number /=10;
-      }
-      else
-      {
-        seven_seg[i-2] =  number%10;
-        number /=10;
-      }
-    }
-  }
-  update_display(seven_seg,two_seg,NULL);
+  g_s_nums[3] = number%10; number = number/10;
+  g_s_nums[2] = number%10; number = number/10;
+  g_t_nums[1] = number%10; number = number/10;
+  g_s_nums[1] = number%10; number = number/10;
+  g_s_nums[0] = number%10; number = number/10;
+  g_t_nums[0] = number%10;
+
+  update_display(g_s_nums,g_t_nums,NULL);
 }
 
 void update_right_numbers(uint8_t numbers)
 {
-  g_t_nums[1] = (((numbers/100) % 10) ? 1 : 0);
-  g_s_nums[2] = (numbers/10) % 10;
-  g_s_nums[3] = numbers % 10;
+  g_s_nums[3] = numbers % 10; numbers /= 10;
+  g_s_nums[2] = numbers % 10; numbers /= 10;
+  g_t_nums[1] = ((numbers % 10) ? 1 : 0);
   update_display(g_s_nums,g_t_nums,NULL);
 }
 
@@ -409,6 +389,10 @@ void clear_screen()
   }
 }
 
+/*
+  Note about interrupt: 
+  It breaks any serial communication. 
+*/
 void init_screen_ISR()
 {
   DDRB |= (1 << 5);         // set Arduino pin 13 as output
