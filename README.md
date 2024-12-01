@@ -111,5 +111,7 @@ While initially exploring interrupt-based refreshing, timer conflicts disrupted 
 ## Note
 There is a half-way completed **C++ implementation**, which is not fully tested. It will be completed and later used as a library for the **Arduino IDE**.
 
+## Another Note
+Due to compatibility reasons, the file extensions are .cpp, but the code is written in C and is fully compatible with C.
 
 
